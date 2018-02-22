@@ -64,6 +64,8 @@ The goals / steps of this project are the following:
 [image42]: ./writeup_images/41_training_sample.png
 [image43]: ./writeup_images/42_training_sample.png
 [image44]: ./writeup_images/math.png
+[image45]: ./writeup_images/normal_gray.png
+[image46]: ./writeup_images/model_arch.png
 
 
 
@@ -132,21 +134,38 @@ My final model consisted of the following layers:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
+| Input         		| 32x32x1 grayscale image   					| 
+| Convolution1 3x3     	| 1x1 stride, valid padding, outputs 30x30x6    |
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
+| Convolution2 3x3     	| 1x1 stride, valid padding, outputs 28x28x16   |
+| RELU					|												|
+| Max pooling	      	| 2x2 stride,  outputs 14x14x16 				|
+| Convolution3 3x3     	| 1x1 stride, valid padding, outputs 12x12x32   |
+| RELU					|												|
+| Convolution4 3x3     	| 1x1 stride, valid padding, outputs 10x10x32   |
+| RELU					|												|
+| Max pooling	      	| 2x2 stride,  outputs 5x5x64 				    |
+| Convolution5 3x3     	| 1x1 stride, valid padding, outputs 3x3x128    |
+| RELU					|												|
+| Convolution6 3x3     	| 1x1 stride, valid padding, outputs 2x2x140    |
+| RELU					|												|
+| Max pooling	      	| 2x2 stride,  outputs 1x1x140 				    |
+| Fully connected		| input: 140 output: 120 					    |
+| Fully connected		| input: 120 output: 84 						|
+| Fully connected   	| input: 84 output: 43						    |
+| Softmax   			|												|
 |						|												|
  
+ I used Tensorboard as part of this project and this is the graph produced:
+
+ ![graph][image46]
+
+It clearly shows the 6 convolutional layers, the ones colored green have the max pooling contained in them. The third fully connected layer I have labeled "Logits"
 
 
 #### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-To train the model, I used an ....
+To train the model, I used the [Adam Optimizer](https://arxiv.org/abs/1412.6980) with a learning rate of 0.001, a batch size of 256, and 50 epochs
 
 #### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
