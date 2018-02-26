@@ -79,7 +79,7 @@ The goals / steps of this project are the following:
 [image57]: ./writeup_images/p4Children_crossing.png
 [image58]: ./writeup_images/p5Turn_left_ahead.png
 [image59]: ./writeup_images/p6Bicycles_crossing.png
-[image60]: ./writeup_images/model_arch.png
+[image60]: ./writeup_images/model_arch.PNG
 
 
 
