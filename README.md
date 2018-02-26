@@ -63,7 +63,7 @@ The goals / steps of this project are the following:
 [image41]: ./writeup_images/40_training_sample.png
 [image42]: ./writeup_images/41_training_sample.png
 [image43]: ./writeup_images/42_training_sample.png
-[image44]: ./writeup_images/math.png
+[image44]: ./writeup_images/math.PNG
 [image45]: ./writeup_images/normal_gray.png
 [image46]: ./signs_from_google_maps/30kph.bmp
 [image47]: ./signs_from_google_maps/bicycles_only.bmp
@@ -79,6 +79,7 @@ The goals / steps of this project are the following:
 [image57]: ./writeup_images/p4Children_crossing.png
 [image58]: ./writeup_images/p5Turn_left_ahead.png
 [image59]: ./writeup_images/p6Bicycles_crossing.png
+[image60]: ./writeup_images/model_arch.PNG
 
 
 
@@ -91,11 +92,11 @@ The goals / steps of this project are the following:
 
 #### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
-You're reading it! and here is a link to my [project code](https://github.com/ryan-jonesford/ConvolutionalNN/blob/master/CNN-Project.ipynb)
+You're reading it! and here is a link to my [project code](https://github.com/ryan-jonesford/ConvolutionalNN/blob/StandOut)
 
 ### Data Set Summary & Exploration
 
-#### 1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hard coding results manually.
+#### 1. Provide a basic summary of the data set.
 
 I used the pandas library to calculate summary statistics of the traffic
 signs data set:
@@ -127,7 +128,7 @@ Since I'm not German and am unfamiliar with their traffic signs I also printed o
 
 ### Design and Test a Model Architecture
 
-#### 1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Preprocessing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented_training_set like number of images in the set, number of images for each class, etc.)
+#### 1. Describe how you preprocessed the image data.
 
 Preprocessing the images is an important step in developing a convolutional neural network.  Images with a lot of depth can make the network work harder than needed if that depth isn't important to the identification of the image; as is the case with this project. 
 
@@ -141,7 +142,13 @@ The above images are from the data set, here is a sample of the image after putt
 
 ![Normalized image][image45]
 
-#### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
+I also augmented my dataset with modified images of the original dataset. I augmented it in two ways. 
+
+The first way I augmented it was I made a copy of the entire dataset and ran a random size distortion on it. This will help to account for weird camera angles that makes the signs look squished, and smaller images where the signs don’t take up the entire image space. 
+
+The second way that I augmented the dataset was to add more images from test sets that had less. For example I doubled the amount of speed limit 20km/h signs. Those signs that I added, I also ran a random distortion on with equal parts likely to either add noise (jitter) to the image, rotate it, and randomly brighten it. This keeps the augmented dataset fresh, so the model isn’t training on the same images. 
+
+#### 2. Describe what your final model architecture looks like.
 
 My final model consisted of the following layers:
 
@@ -165,81 +172,84 @@ My final model consisted of the following layers:
 | Max pooling	      	| 2x2 stride,  outputs 1x1x140 				    |
 | Fully connected		| input: 140 output: 120 					    |
 | Fully connected		| input: 120 output: 84 						|
+| Dropout		  	|  50% 						    |
 | Fully connected   	| input: 84 output: 43						    |
 | Softmax   			|												|
 |						|												|
  
  I used Tensorboard as part of this project and this is the graph produced:
 
- ![graph][image46]
+ ![graph][image60]
 
 It clearly shows the 6 convolutional layers, the ones colored green have the max pooling contained in them. The third fully connected layer I have labeled "Logits"
 
 
-#### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyper-parameters such as learning rate.
+#### 3. Describe how you trained your model.
 
 To train the model, I used the [Adam Optimizer](https://arxiv.org/abs/1412.6980) with a learning rate of 0.001, a batch size of 256, and 50 epochs
 
-#### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
+I also started out with truncated normal weights with a stdev of .1 and mean of 0. Used valid padding and strides of 1 for my convolutional layers. A stride and kernel size of 2 for my pooling. And finally a 50% dropout rate on my last fully connected layer.
+
+#### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. 
 
 My final model results were:
-*_training_set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* validation set accuracy of about 95% 
+* test set accuracy of .918
 
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over-fitting or under-fitting. A high accuracy on the_training_set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
+The fact that my test set was so much lower than my validation sets seems to point to over-fitting. 
 
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
+I first started out with the simple LeNet architecture since it was the one we used in class. Doing some research on my own I found that there have been many successful architectures that I could choose from, but that’s not exactly what I wanted to do. I wanted to get a feel for how many of the architectures are made and create my own.
+I found that many architectures used multiple convolutional layers before pooling and finally running it through a fully connected layer at the end. 
+I struggled for many days trying to get a network to run correctly. Eventually I settled on the one that is in my report. There are many hyper-parameters that I had that I can tune and play around with:
+
+* learning rate
+* initialization weights and biases
+* layer sizes
+* dropout rate
+* stride length
+* kernel size
+* padding style
+
+Unfortunately for me, the model that I developed doesn’t seem to be much better than the LeNet model that I started out with. Perhaps if I had played with the hyperparamters a little more and augmented my data before going in search of a different architecture I could have gotten near the same results. 
+
 
 ### Test a Model on New Images
 
-#### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+#### 1. Run the model on five German traffic signs found on the web.
 
-Here are seven German traffic signs that I found while useing Google Street view in a couple differnet cities in Germany:
+While the rubric asked for five I wanted a slightly larger dataset so, here are seven German traffic signs that I found while using Google Street view in a couple different cities in Germany:
 
-![30 Km/h][image46] ![bicyles only][image47] ![children crossing][image48] 
+![30 Km/h][image46] ![bicycles only][image47] ![children crossing][image48] 
 ![Do not enter][image49] ![mandatory left ahead][image50]
 ![do not enter][image51] ![yield][image52]
 
 I expect that all but two of these images should be easy to classify. Image 3 (children crossing) is quite distorted and blurry and the number of examples in the training dataset wasn't very high, so it will be hard to classify correctly.
 Image 2 is not a sign that has been classified in the training program. My hope is, is that the classification will be a sign that is similar to it: “bicycle crossing”. The sign actually means “bicycles only”. 
 
-#### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
-#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the soft-max probabilities for each prediction. Provide the top 5 soft-max probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+#### 2 & 3. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Describe how certain the model is when predicting on each of the five new images by looking at the soft-max probabilities for each prediction. 
 
-I'm combining the last two parts of the rubric into this single section.
 
-Here are the results of the prediction:
+# Here are the results of the prediction:
 
 | Sign              |  Probability  |     Prediction        | Correct?  |
 |:-----------------:|:-------------:|:---------------------:|:---------:|
 |Yield              | 1.0         	| Yield                 | Yes       |
-|No Entry           | .52     		| Roundabout mandatory  | No        |
-|No Entry           | .98			| No Entry              | Yes       |
+|No Entry           | 1.0   		| No Entry              | Yes       |
+|No Entry           | 1.0			| No Entry              | Yes       |
 |Speed limit 30km/h | .99	      	| Speed limit 30km/h    | Yes       |
-|Chidren Crossing   | .75			| Double curve          | No        |
+|Children Crossing   | 1.0			| Right-of-way at next  | No        |
 |Turn left Ahead    | 1.0			| Turn left ahead       | Yes       |
-|Bicyles Only       | .49			| Keep right            | No        |
+|Bicycles Only       | .83			| No Entry           | No        |
 
-The model was able to correctly guess 4 of the 7 traffic signs, which gives a surprissingly low accuracy of 57.1%.
+The model was able to correctly guess 5 of the 7 traffic signs, which gives an accuracy of 71.4%.
 
 ![yield prediction][image53]
 ![no entry prediction][image54]
 ![no entry prediction(2)][image55]
 ![Speed limit 30km/h prediction][image56]
-![Children Crossin prediction][image57]
+![Children Crossing prediction][image57]
 ![Turn left ahead prediction][image53]
 ![Bicycles crossing prediction][image59]
 
-### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-#### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
+As can be seen from the graphs above, the model seems to be certain of itself on all the new images I fed it, even though it got two wrong. The only one that it showed some uncertainty on is the one that wasn’t in the dataset. It’s interesting that it interpreted it as “No Entry”; since that would work in a real life scenario (since bicycles only really means “no cars” which could also mean “no entry”), but this feels (and probably is) more like luck. 
