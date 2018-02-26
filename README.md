@@ -63,7 +63,7 @@ The goals / steps of this project are the following:
 [image41]: ./writeup_images/40_training_sample.png
 [image42]: ./writeup_images/41_training_sample.png
 [image43]: ./writeup_images/42_training_sample.png
-[image44]: ./writeup_images/math.png
+[image44]: ./writeup_images/math.PNG
 [image45]: ./writeup_images/normal_gray.png
 [image46]: ./signs_from_google_maps/30kph.bmp
 [image47]: ./signs_from_google_maps/bicycles_only.bmp
